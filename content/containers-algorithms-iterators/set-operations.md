@@ -85,6 +85,8 @@ auto i2 = std::includes(v1.cbegin(), v1.cend(),
 - The input ranges must be sorted, either using `operator<` or the provided comparison function object, depending on the overload that is used.
 - The output range must not overlap the input ranges.
 
+On the other hand, `std::includes()` does not produce an output range; it only checks whether the second range is included in the first range. It returns a boolean value that is true if the second range is empty or all its elements are included in the first range, and false otherwise. It also has two overloads, one of which specifies a comparison binary function object.
+
 We will demonstrate the way they work with additional examples, using a vector of the POD type `task` from the previous documentation:
 
 ```cpp
