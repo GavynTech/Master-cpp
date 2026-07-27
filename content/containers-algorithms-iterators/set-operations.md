@@ -136,3 +136,54 @@ The output range contains all twelve tasks, ordered by priority:
 ```
 
 Because `operator<` compares only the `priority` member, the four tasks with priority 20 are all equivalent as far as the algorithm is concerned; their names are what let us see the order it actually chose. `std::merge()` is stable, so when elements from the two ranges compare equivalent, the ones from the first range are copied first — which is why `Task 1.2` and `Task 1.3` precede `Task 2.2` and `Task 2.3`. That guarantee is what makes `std::merge()` usable as the combining step of a merge sort.
+
+- Use `std::set_difference()` to compute the difference of the two ranges of tasks; every priority in the first range is also present in the second, so no task survives and the output range is left empty:
+
+```cpp
+std::vector<task> v3;
+
+std::set_difference(v1.cbegin(), v1.cend(),
+                    v2.cbegin(), v2.cend(),
+                    std::back_inserter(v3));
+// v3 is empty
+```
+
+This result is worth pausing on. Every name in the two vectors is different, yet nothing is copied, because `operator<` looks only at `priority`: the algorithm considers each task in `v1` to have a match in `v2`. Membership here means whatever the comparison function says it means, not whole-object equality.
+
+To see the difference produce something, compare against a range that does not cover every priority:
+
+```cpp
+std::vector<task> v4 {
+    { 20, "Task 4.1" },
+    { 30, "Task 4.2" }
+};
+
+std::vector<task> v5;
+
+std::set_difference(v1.cbegin(), v1.cend(),
+                    v4.cbegin(), v4.cend(),
+                    std::back_inserter(v5));
+// v5 = { 10, "Task 1.1" }, { 20, "Task 1.3" },
+//      { 30, "Task 1.5" }, { 50, "Task 1.6" }
+```
+
+Priorities 10 and 50 are missing from `v4` entirely, so their tasks are copied. Priorities 20 and 30 appear twice in `v1` and once in `v4`, so one of each survives — and it is worth noticing which one: `Task 1.3` and `Task 1.5`, not `Task 1.2` and `Task 1.4`. When the first range holds *m* equivalent elements and the second holds *n*, `std::set_difference()` copies the **final** max(*m* − *n*, 0) of them.
+
+- Use `std::set_intersection()` to compute the intersection of the two ranges of tasks:
+
+```cpp
+std::set_intersection(v1.cbegin(), v1.cend(),
+                      v2.cbegin(), v2.cend(),
+                      std::back_inserter(v3));
+```
+
+This time the output range holds only six tasks:
+
+```text
+{ 10, "Task 1.1" },
+{ 20, "Task 1.2" }, { 20, "Task 1.3" },
+{ 30, "Task 1.4" }, { 30, "Task 1.5" },
+{ 50, "Task 1.6" }
+```
+
+Every priority in the first range is also present in the second one, so all six tasks are part of the intersection. When elements from the two ranges compare equivalent, `std::set_intersection()` copies the ones from the first range, which is why the output contains only `Task 1.x` names and none of their `Task 2.x` counterparts.
