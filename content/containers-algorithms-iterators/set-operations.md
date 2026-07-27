@@ -189,3 +189,10 @@ This time the output range holds only six tasks:
 ```
 
 Every priority in the first range is also present in the second one, so all six tasks are part of the intersection. When elements from the two ranges compare equivalent, `std::set_intersection()` copies the ones from the first range, which is why the output contains only `Task 1.x` names and none of their `Task 2.x` counterparts.
+
+## See also
+
+- [Using vector as a default container](/containers-algorithms-iterators/vector/), to learn how to use the `std::vector` standard container.
+- [Sorting a range](/containers-algorithms-iterators/sorting/), to learn about the standard algorithms for sorting ranges.
+- [Using iterators to insert new elements in a container](/containers-algorithms-iterators/inserting-elements/), to learn how to use iterators and iterator adapters to add elements in a range.
+- [Finding elements in a range](/containers-algorithms-iterators/finding-elements/), to learn about the standard algorithms for searching through a sequence of values.
