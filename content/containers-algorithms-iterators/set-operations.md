@@ -190,9 +190,53 @@ This time the output range holds only six tasks:
 
 Every priority in the first range is also present in the second one, so all six tasks are part of the intersection. When elements from the two ranges compare equivalent, `std::set_intersection()` copies the ones from the first range, which is why the output contains only `Task 1.x` names and none of their `Task 2.x` counterparts.
 
+- Use `std::set_symmetric_difference()` to compute the dual difference of the two ranges of tasks; as with `std::set_difference()`, the two ranges hold matching priorities, so neither contributes anything and the output range is left empty:
+
+```cpp
+std::vector<task> v3;
+
+std::set_symmetric_difference(v1.cbegin(), v1.cend(),
+                              v2.cbegin(), v2.cend(),
+                              std::back_inserter(v3));
+// v3 is empty
+```
+
+Comparing against a range that has a priority of its own shows both directions at work:
+
+```cpp
+std::vector<task> v6 {
+    { 20, "Task 6.1" },
+    { 40, "Task 6.2" }
+};
+
+std::vector<task> v7;
+
+std::set_symmetric_difference(v1.cbegin(), v1.cend(),
+                              v6.cbegin(), v6.cend(),
+                              std::back_inserter(v7));
+// v7 = { 10, "Task 1.1" }, { 20, "Task 1.3" }, { 30, "Task 1.4" },
+//      { 30, "Task 1.5" }, { 40, "Task 6.2" }, { 50, "Task 1.6" }
+```
+
+The output is drawn from both inputs and stays sorted by priority as it interleaves them. Priority 40 exists only in `v6`, so `Task 6.2` is copied out of the second range, while everything else comes from the first. Priority 20 appears twice in `v1` and once in `v6`, leaving one task, and again it is the later `Task 1.3` rather than `Task 1.2`.
+
+- Use `std::includes()` to check whether every task in one range has a counterpart in another:
+
+```cpp
+auto i1 = std::includes(v1.cbegin(), v1.cend(),
+                        v2.cbegin(), v2.cend());
+// i1 = true
+
+auto i2 = std::includes(v1.cbegin(), v1.cend(),
+                        v6.cbegin(), v6.cend());
+// i2 = false
+```
+
+The first result is the sharpest illustration of the rule that governs this whole page. Not one task in `v1` shares a name with any task in `v2`, and yet `std::includes()` reports `true`, because the only question it ever asks is whether `operator<` orders one element before another. By that measure the two ranges are indistinguishable. The second result is `false` for a single reason: no task in `v1` carries priority 40.
+
 ## See also
 
 - [Using vector as a default container](/containers-algorithms-iterators/vector/), to learn how to use the `std::vector` standard container.
 - [Sorting a range](/containers-algorithms-iterators/sorting/), to learn about the standard algorithms for sorting ranges.
-- [Using iterators to insert new elements in a container](/containers-algorithms-iterators/inserting-elements/), to learn how to use iterators and iterator adapters to add elements in a range.
+- Using iterators to insert new elements in a container, to learn how to use iterators and iterator adapters to add elements in a range.
 - [Finding elements in a range](/containers-algorithms-iterators/finding-elements/), to learn about the standard algorithms for searching through a sequence of values.
