@@ -148,7 +148,7 @@ The standard library's working core: the containers that own your data, the algo
   <li><a href="/containers-algorithms-iterators/initializing/">Initializing a range</a>
     <p>The algorithms that fill a range with values: fill and fill_n for a single value, generate and generate_n for values from a function, iota for consecutive sequences, and a real-life color gradient that puts them to work.</p></li>
   <li><a href="/containers-algorithms-iterators/set-operations/">Using set operations on a range</a>
-    <p>Page in progress.</p></li>
+    <p>The algorithms that combine sorted ranges: set_union and merge for putting two ranges together, set_intersection for what they share, set_difference and set_symmetric_difference for what they do not, includes for subset tests, and a task type that reveals how each one chooses among equivalent elements.</p></li>
 </ul>
 
 ## Coming soon
