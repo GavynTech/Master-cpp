@@ -16,6 +16,15 @@ std::vector<int> v2 {2, 3, 3, 4, 6, 8};
 std::vector<int> v3;
 ```
 
+- Use `std::set_union()` to compute the union of two ranges into a third range; the output range will contain the elements that are present in either or both of the input ranges:
+
+```cpp
+std::set_union(v1.cbegin(), v1.cend(),
+               v2.cbegin(), v2.cend(),
+               std::back_inserter(v3));
+// v3 = {1, 2, 3, 3, 4, 4, 5, 6, 8}
+```
+
 - Use `std::merge()` to merge the content of two ranges into a third one; this is similar to `std::set_union()` except that it copies the entire content of the input ranges into the output one, not just their union:
 
 ```cpp
