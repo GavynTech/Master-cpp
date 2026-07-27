@@ -115,3 +115,24 @@ std::vector<task> v2 {
     { 50, "Task 2.6" }
 };
 ```
+
+- Use `std::merge()` to merge the content of two ranges into a third one; every element from both input ranges is copied to the output:
+
+```cpp
+std::vector<task> v3;
+
+std::merge(v1.cbegin(), v1.cend(),
+           v2.cbegin(), v2.cend(),
+           std::back_inserter(v3));
+```
+
+The output range contains all twelve tasks, ordered by priority:
+
+```text
+{ 10, "Task 1.1" }, { 10, "Task 2.1" },
+{ 20, "Task 1.2" }, { 20, "Task 1.3" }, { 20, "Task 2.2" }, { 20, "Task 2.3" },
+{ 30, "Task 1.4" }, { 30, "Task 1.5" }, { 30, "Task 2.4" }, { 30, "Task 2.5" },
+{ 50, "Task 1.6" }, { 50, "Task 2.6" }
+```
+
+Because `operator<` compares only the `priority` member, the four tasks with priority 20 are all equivalent as far as the algorithm is concerned; their names are what let us see the order it actually chose. `std::merge()` is stable, so when elements from the two ranges compare equivalent, the ones from the first range are copied first — which is why `Task 1.2` and `Task 1.3` precede `Task 2.2` and `Task 2.3`. That guarantee is what makes `std::merge()` usable as the combining step of a merge sort.
