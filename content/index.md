@@ -149,9 +149,11 @@ The standard library's working core: the containers that own your data, the algo
     <p>The algorithms that fill a range with values: fill and fill_n for a single value, generate and generate_n for values from a function, iota for consecutive sequences, and a real-life color gradient that puts them to work.</p></li>
   <li><a href="/containers-algorithms-iterators/set-operations/">Using set operations on a range</a>
     <p>The algorithms that combine sorted ranges: set_union and merge for putting two ranges together, set_intersection for what they share, set_difference and set_symmetric_difference for what they do not, includes for subset tests, and a task type that reveals how each one chooses among equivalent elements.</p></li>
+  <li><a href="/containers-algorithms-iterators/inserting-elements/">Using iterators to insert new elements in a container</a>
+    <p>The adapters that let an algorithm grow a container: back_inserter, front_inserter, and inserter, the output-iterator operations they redefine to make assignment mean insertion, the reversal front_inserter performs, and the position hint that associative containers are free to ignore.</p></li>
 </ul>
 
-## Coming soon
+## In progress
 
 Phases 1 through 4 cover core language features, working with numbers and strings, exploring functions, and preprocessing and compilation; phase 5 — the standard library's containers, algorithms, and iterators — is underway above. Future phases will go equally deep on ranges, general-purpose utilities, and threading and concurrency.
 

@@ -238,5 +238,5 @@ The first result is the sharpest illustration of the rule that governs this whol
 
 - [Using vector as a default container](/containers-algorithms-iterators/vector/), to learn how to use the `std::vector` standard container.
 - [Sorting a range](/containers-algorithms-iterators/sorting/), to learn about the standard algorithms for sorting ranges.
-- Using iterators to insert new elements in a container, to learn how to use iterators and iterator adapters to add elements in a range.
+- [Using iterators to insert new elements in a container](/containers-algorithms-iterators/inserting-elements/), to learn how to use iterators and iterator adapters to add elements in a range.
 - [Finding elements in a range](/containers-algorithms-iterators/finding-elements/), to learn about the standard algorithms for searching through a sequence of values.
