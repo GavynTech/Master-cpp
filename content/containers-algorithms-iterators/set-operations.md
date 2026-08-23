@@ -118,6 +118,27 @@ std::vector<task> v2 {
 };
 ```
 
+- Use `std::set_union()` to compute the union of the two ranges of tasks; for every priority, the output range holds as many tasks as whichever input contains the most of them:
+
+```cpp
+std::vector<task> v3;
+
+std::set_union(v1.cbegin(), v1.cend(),
+               v2.cbegin(), v2.cend(),
+               std::back_inserter(v3));
+```
+
+The output range holds six tasks, all drawn from the first range:
+
+```text
+{ 10, "Task 1.1" },
+{ 20, "Task 1.2" }, { 20, "Task 1.3" },
+{ 30, "Task 1.4" }, { 30, "Task 1.5" },
+{ 50, "Task 1.6" }
+```
+
+Both ranges carry the same priorities with the same multiplicities, so the union comes out looking exactly like the intersection did — the same six `Task 1.x` names. When an element appears *m* times in the first range and *n* times in the second, `std::set_union()` copies all *m* from the first range and then max(*n* − *m*, 0) from the second. Here *m* equals *n* for every priority, so nothing is ever taken from the second range and no `Task 2.x` name reaches the output.
+
 - Use `std::merge()` to merge the content of two ranges into a third one; every element from both input ranges is copied to the output:
 
 ```cpp
