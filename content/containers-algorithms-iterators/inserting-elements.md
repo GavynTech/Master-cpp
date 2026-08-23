@@ -58,6 +58,21 @@ int main() {
 }
 ```
 
+The three adapters differ only in the member function they call, so a container supports an adapter exactly when it provides that member. This table summarises where each one applies:
+
+| Container | `back_inserter` (`push_back`) | `front_inserter` (`push_front`) | `inserter` (`insert`) |
+|---|:---:|:---:|:---:|
+| `std::vector` | yes | no | yes |
+| `std::deque` | yes | yes | yes |
+| `std::list` | yes | yes | yes |
+| `std::forward_list` | no | yes | no |
+| `std::string` | yes | no | yes |
+| `std::array` | no | no | no |
+| `std::set` / `std::map` (and `multi`/`unordered_` variants) | no | no | yes |
+| `std::stack` / `std::queue` / `std::priority_queue` | no | no | no |
+
+A few entries are worth calling out. `std::vector` has no `push_front`, so `std::front_inserter()` cannot target it — front insertion would be a linear-time shift of every element. `std::forward_list` is the mirror image: it offers `push_front()` but no `push_back()` and no plain `insert()` (only `insert_after()`), so `std::inserter()` does not apply either. `std::array` is fixed size and grows through none of these members. The associative and unordered containers support only `std::inserter()`, where the position argument is a hint rather than an instruction. The container adapters expose no iterators at all, so none of the three apply.
+
 ## How it works
 
 All three are output iterators, and each is a thin wrapper holding a pointer to the container it was built from. What makes them work is that they redefine the three operations an algorithm performs on an output iterator so that only one of them does anything at all:
