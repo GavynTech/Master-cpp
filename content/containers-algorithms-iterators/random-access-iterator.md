@@ -63,3 +63,20 @@ public:
 
 `value_type` stays bare `T`, as the traits require — it is `reference` and `pointer` that pick up `const` when `is_const` is `true`; instantiate the mutable form (`is_const == false`) and they collapse back to exactly `T&` and `T*`. `difference_type` must be a *signed* type, since subtracting two iterators can run negative, and `self_type` simply saves respelling the full template-id in the operations to come.
 
+## The iterator's state
+
+An iterator has to remember two things: where the data is, and where in it we are. The iterator class needs a random-access pointer to the array of data and the current index into that array:
+
+```cpp
+private:
+    pointer ptr = nullptr;   // points at the array's data
+    size_t index = 0;        // current position within it
+
+    bool compatible(self_type const& other) const
+    {
+        return ptr == other.ptr;
+    }
+```
+
+`ptr` is the *base* pointer — it stays fixed at the start of the array while every move (`++`, `+= n`, subscript) works by changing `index` instead, so dereferencing is just `ptr[index]`. Because advancing never touches `ptr`, two iterators into the same array always share it, which is exactly what `compatible()` checks: comparing base pointers tells us whether two iterators refer to the same collection. The relational and difference operators will call it to guard against comparing positions in unrelated arrays — an operation that is meaningless and undefined.
+
