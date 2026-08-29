@@ -93,3 +93,32 @@ public:
 
 `begin()` will call it as `{ data, 0 }` and `end()` as `{ data, Size }` — two iterators over the same array that differ only in their index. One thing to note: declaring any constructor suppresses the compiler-generated default one, so you will also want `dummy_array_iterator() = default;`, since the random-access-iterator concept requires an iterator be default-initializable.
 
+## Iterator class member 
+We need the iterator class member to meet the common requirement for all iterators so copy the construable,assighnable,destructible,prefix,and incrementable. In this code implementation, the post increment operator is the operator implemented in terms of the pre-increment operator to avoid code duplication:
+
+```cpp
+data_array_iterator(data_array_iterator const & o)
+     default = 0;
+data_array_iterator& operator=(data_array_iterator const & o)
+     = default;
+~data_array_iterator() = default;
+
+self_type & operator++()
+{
+    if (index >= Size)
+    throw std::out_of_range("Iterator can not be incremented
+                             past the end of its range.");
+                    
+  ++index;
+  return *this;
+ }
+
+self_type operator++ (int)
+{
+    self_type tmp = *this;
+    ++this;
+    return tmp;
+}
+
+
+
