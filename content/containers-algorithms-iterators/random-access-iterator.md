@@ -4,11 +4,11 @@ section: Standard library containers, algorithms, and iterators
 section_href: /#standard-library-containers-algorithms-and-iterators
 ---
 
-Back in chapter 1, [Enabling range-based for on your own types](/core-language/range-for-custom-types/) made a custom type iterable by giving it a small nested iterator. That iterator was deliberately minimal — three operations and no more: `operator*` to read the current element, prefix `operator++` to advance, and `operator!=` to tell when the end had been reached. That trio is the entire protocol range-based `for` asks for.
+Back in chapter 1, [Enabling range-based for on your own types](/core-language/range-for-custom-types/) made a custom type iterable by giving it a small nested iterator. That iterator was deliberately minimal  three operations and no more: `operator*` to read the current element, prefix `operator++` to advance, and `operator!=` to tell when the end had been reached. That trio is the entire protocol range-based `for` asks for.
 
-What is worth noticing now is everything that iterator could *not* do. You could not hand it to `std::sort`, `std::accumulate`, or any other standard algorithm, because it was not a model of any standard iterator category. It could not be copy-constructed and assigned the way the library requires, and it could not be incremented in any form beyond the single prefix `++` — no post-increment, no stepping backwards, no jumping *n* positions at once, no subscript, and none of the member type aliases the algorithms inspect. Range-based `for` is forgiving; the algorithms are not. To write an iterator the whole library will accept, you have to satisfy the full set of requirements for the category you are targeting.
+What is worth noticing now is everything that iterator could *not* do. You could not hand it to `std::sort`, `std::accumulate`, or any other standard algorithm, because it was not a model of any standard iterator category. It could not be copy-constructed and assigned the way the library requires, and it could not be incremented in any form beyond the single prefix `++`  no post-increment, no stepping backwards, no jumping *n* positions at once, no subscript, and none of the member type aliases the algorithms inspect. Range-based `for` is forgiving; the algorithms are not. To write an iterator the whole library will accept, you have to satisfy the full set of requirements for the category you are targeting.
 
-This page builds the most capable of those categories — the *random-access iterator*, the one that can move to any element in constant time — starting from an empty container. Before diving in, it helps to have the requirements in front of you: a compact overview of every iterator category and the operations each one is obliged to provide is at [cplusplus.com/reference/iterator](https://www.cplusplus.com/reference/iterator/).
+This page builds the most capable of those categories  the *random-access iterator*, the one that can move to any element in constant time starting from an empty container. Before diving in, it helps to have the requirements in front of you: a compact overview of every iterator category and the operations each one is obliged to provide is at [cplusplus.com/reference/iterator](https://www.cplusplus.com/reference/iterator/).
 
 ## A container to iterate over
 
@@ -78,11 +78,11 @@ private:
     }
 ```
 
-`ptr` is the *base* pointer — it stays fixed at the start of the array while every move (`++`, `+= n`, subscript) works by changing `index` instead, so dereferencing is just `ptr[index]`. Because advancing never touches `ptr`, two iterators into the same array always share it, which is exactly what `compatible()` checks: comparing base pointers tells us whether two iterators refer to the same collection. The relational and difference operators will call it to guard against comparing positions in unrelated arrays — an operation that is meaningless and undefined.
+`ptr` is the *base* pointer  it stays fixed at the start of the array while every move (`++`, `+= n`, subscript) works by changing `index` instead, so dereferencing is just `ptr[index]`. Because advancing never touches `ptr`, two iterators into the same array always share it, which is exactly what `compatible()` checks: comparing base pointers tells us whether two iterators refer to the same collection. The relational and difference operators will call it to guard against comparing positions in unrelated arrays — an operation that is meaningless and undefined.
 
 ## An explicit constructor
 
-The container builds an iterator by handing it those two pieces of state — the base pointer and a starting index. A single constructor stores them, marked `explicit` so a bare `pointer` can never silently convert into an iterator:
+The container builds an iterator by handing it those two pieces of state  the base pointer and a starting index. A single constructor stores them, marked `explicit` so a bare `pointer` can never silently convert into an iterator:
 
 ```cpp
 public:
