@@ -80,3 +80,16 @@ private:
 
 `ptr` is the *base* pointer — it stays fixed at the start of the array while every move (`++`, `+= n`, subscript) works by changing `index` instead, so dereferencing is just `ptr[index]`. Because advancing never touches `ptr`, two iterators into the same array always share it, which is exactly what `compatible()` checks: comparing base pointers tells us whether two iterators refer to the same collection. The relational and difference operators will call it to guard against comparing positions in unrelated arrays — an operation that is meaningless and undefined.
 
+## An explicit constructor
+
+The container builds an iterator by handing it those two pieces of state — the base pointer and a starting index. A single constructor stores them, marked `explicit` so a bare `pointer` can never silently convert into an iterator:
+
+```cpp
+public:
+    explicit dummy_array_iterator(pointer ptr, size_t const index)
+        : ptr(ptr), index(index)
+    { }
+```
+
+`begin()` will call it as `{ data, 0 }` and `end()` as `{ data, Size }` — two iterators over the same array that differ only in their index. One thing to note: declaring any constructor suppresses the compiler-generated default one, so you will also want `dummy_array_iterator() = default;`, since the random-access-iterator concept requires an iterator be default-initializable.
+
