@@ -43,3 +43,23 @@ public:
 
 The element count is a template parameter, so the size is baked into the type and the array lives inline with no allocation. Two subscript operators give read-write access to a `dummy_array` and read-only access to a `const dummy_array`, each bounds-checked so an out-of-range index throws rather than reads past the storage, and `size()` reports the fixed length. What it does *not* have yet is any `begin()` or `end()` — so at this point it works with neither range-based `for` nor a single algorithm. Supplying that is the whole job of the iterator we are about to write.
 
+## The iterator's type aliases
+
+To provide a mutable and constant random-access iterator for the `dummy_array` class shown in the previous section, write one class template and let a `bool` decide which of the two it is. Add the following members:
+
+```cpp
+template <typename T, size_t const Size, bool is_const>
+class dummy_array_iterator
+{
+public:
+    using self_type = dummy_array_iterator;
+    using value_type = T;
+    using reference = std::conditional_t<is_const, T const&, T&>;
+    using pointer = std::conditional_t<is_const, T const*, T*>;
+    using iterator_category = std::random_access_iterator_tag;
+    using difference_type = ptrdiff_t;
+};
+```
+
+`value_type` stays bare `T`, as the traits require — it is `reference` and `pointer` that pick up `const` when `is_const` is `true`; instantiate the mutable form (`is_const == false`) and they collapse back to exactly `T&` and `T*`. `difference_type` must be a *signed* type, since subtracting two iterators can run negative, and `self_type` simply saves respelling the full template-id in the operations to come.
+
